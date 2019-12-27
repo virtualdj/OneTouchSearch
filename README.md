@@ -21,7 +21,7 @@ Open the registry key:
 
 and change the value `SearchEngineURL` with the URL of your choice. Some examples:
 * Google Search in Italian
-  `http://www.google.com/search?q=`
+  `https://www.google.it/search?hl=it&q=`
 * Duck Duck Go in English
   `https://duckduckgo.com/?q=`
 
