@@ -1,5 +1,7 @@
 #include "stdafx.h"
 #include "resource.h"
+#include <vector>
+#pragma comment(lib,"Version.lib")
 
 // Define handles
 HINSTANCE g_hInstance = (HINSTANCE)GetModuleHandle(NULL);
@@ -11,6 +13,39 @@ CTrayIcon g_TrayIconOTS("One Touch Search", true, LoadIcon(g_hInstance, MAKEINTR
 
 // Define OneTouchSearch function (implemented in OneTouchSearch.cpp)
 void oneTouchSearch(const wchar_t* search_engine_url);
+
+// Get app version info from resource
+bool GetAppVersion(CStringW &ver) {
+	// Get the filename of the app
+	TCHAR szFileName[MAX_PATH + 1] = {0};
+	if (GetModuleFileName(NULL, szFileName, MAX_PATH) == 0)
+		return false;
+
+	// Get size of version resource
+	DWORD dwHandle;
+	DWORD dwSize = GetFileVersionInfoSize(szFileName, &dwHandle);
+	if (dwSize == 0)
+		return false;
+
+	// Get version info
+	std::vector<BYTE> data(dwSize);
+	if (!GetFileVersionInfo(szFileName, NULL, dwSize, &data[0]))
+		return false;
+
+	// Get the language-independent resource
+	UINT uiVerLen = 0;
+	VS_FIXEDFILEINFO* pFixedInfo = 0;
+	if (VerQueryValue(&data[0], _T("\\"), (void**)&pFixedInfo, (UINT *)&uiVerLen) == 0)
+		return false;
+
+	// Return the string
+	ver.Format(_T("%u.%u.%u"),
+		HIWORD (pFixedInfo->dwProductVersionMS),
+		LOWORD (pFixedInfo->dwProductVersionMS),
+		HIWORD (pFixedInfo->dwProductVersionLS),
+		LOWORD (pFixedInfo->dwProductVersionLS));
+	return true;
+}
 
 // Handle tray icon events
 void g_TrayIconOTS_OnMessage(CTrayIcon* pTrayIcon, UINT uMsg)
@@ -38,9 +73,18 @@ void g_TrayIconOTS_OnMessage(CTrayIcon* pTrayIcon, UINT uMsg)
 					if (cmd == 2)
 						// Exit
 						PostMessage(g_hMainWnd, WM_CLOSE, 0, 0);
-					else if (cmd == 1)
+					else if (cmd == 1) {
 						// About
-						MessageBox(g_hMainWnd, _T("One Touch Search v1.0\n\nAllows to open the default web browser and search the currently selected text in any program when pressing CTRL+ALT+SHIFT+K (default hotkey).\n\nBind this shortcut to one of your mouse buttons with Logitech Options and you'll get the old OneTouchSearch feature back!"), _T("One Touch Search"), MB_ICONINFORMATION | MB_OK);
+						CStringW appVer;
+						std::wstring aboutMessage;
+						aboutMessage.append(_T("One Touch Search"));
+						if (GetAppVersion(appVer)) {
+							aboutMessage.append(_T(" v"));
+							aboutMessage.append(appVer);
+						}
+						aboutMessage.append(_T("\n\nAllows to open the default web browser and search the currently selected text in any program when pressing CTRL+ALT+SHIFT+K (default hotkey).\n\nBind this shortcut to one of your mouse buttons with Logitech Options and you'll get the old OneTouchSearch feature back!"));
+						MessageBox(g_hMainWnd, aboutMessage.c_str(), _T("One Touch Search"), MB_ICONINFORMATION | MB_OK);
+					}
 				}
 			}
 			break;

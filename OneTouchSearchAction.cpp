@@ -26,6 +26,11 @@ void oneTouchSearch(const wchar_t* search_engine_url) {
 	// Backup current clipboard (text & images should work)
 	CClipboardBackup cbbackup;
 
+	// Empty clipboard to check whether the selection doesn't exist
+	::OpenClipboard(NULL);
+	::EmptyClipboard();
+	::CloseClipboard();
+
 	// Get currently selected text in any application by sending CTRL+INS
 	// https://stackoverflow.com/questions/2251578/how-do-i-get-the-selected-text-from-the-focused-window-using-native-win32-api
 	// ^^ does not work, but the code to get selection in Artha sources does:
