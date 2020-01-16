@@ -282,9 +282,11 @@ bool CTrayIcon::ShowBalloonTooltip(const char* title, const char* msg, ETooltipI
 	if (!m_Visible)
 		return false;
 
+#define NOTIFYICONDATA_V2_SIZE_CORRECT	488;
+
 	NOTIFYICONDATAA data;
 	FillNotifyIconData(data);
-	data.cbSize = NOTIFYICONDATA_V2_SIZE;	// win2k and later
+	data.cbSize = NOTIFYICONDATA_V2_SIZE_CORRECT;	// win2k and later (use hardcoded "CORRECT")
 	data.uFlags |= NIF_INFO;
 	data.dwInfoFlags = icon;
 	data.uTimeout = 10000;	// deprecated as of Windows Vista, it has a min(10000) and max(30000) value on previous Windows versions.

@@ -7,7 +7,7 @@ CStringW getClipboard() {
 	// Return clipboard text in Unicode format
 	CStringW strData;
 
-	if( OpenClipboard(NULL) ) {
+	if (OpenClipboard(NULL)) {
 		HANDLE hData = GetClipboardData(CF_UNICODETEXT);
 		if (hData) {
 			WCHAR *pchData = (WCHAR*) GlobalLock(hData);
@@ -21,7 +21,7 @@ CStringW getClipboard() {
 	return strData;
 }
 
-void oneTouchSearch(const wchar_t* search_engine_url) {
+bool oneTouchSearch(const wchar_t* search_engine_url) {
 
 	// Backup current clipboard (text & images should work)
 	CClipboardBackup cbbackup;
@@ -75,9 +75,22 @@ void oneTouchSearch(const wchar_t* search_engine_url) {
 
 			// Open the default browser
 			ShellExecute(NULL, _T("open"), finalURL, NULL, NULL, SW_SHOWNORMAL);
-		}
 
-		// Restore the clipboard
-		cbbackup.Restore();
+			// Restore the clipboard
+			cbbackup.Restore();
+			return TRUE;
+
+		} else {
+
+			// Restore the clipboard
+			cbbackup.Restore();
+
+			// No text to search
+			return FALSE;
+		}
+	} else {
+
+		// Unable to send keys to copy the text
+		return FALSE;
 	}
 }

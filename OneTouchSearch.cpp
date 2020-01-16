@@ -12,7 +12,7 @@ HWND g_hMainWnd = NULL;
 CTrayIcon g_TrayIconOTS("One Touch Search", true, LoadIcon(g_hInstance, MAKEINTRESOURCE(IDI_ONETOUCHSEARCH)));
 
 // Define OneTouchSearch function (implemented in OneTouchSearch.cpp)
-void oneTouchSearch(const wchar_t* search_engine_url);
+bool oneTouchSearch(const wchar_t* search_engine_url);
 
 // Get app version info from resource
 bool GetAppVersion(CStringW &ver) {
@@ -82,7 +82,7 @@ void g_TrayIconOTS_OnMessage(CTrayIcon* pTrayIcon, UINT uMsg)
 							aboutMessage.append(_T(" v"));
 							aboutMessage.append(appVer);
 						}
-						aboutMessage.append(_T("\n\nAllows to open the default web browser and search the currently selected text in any program when pressing CTRL+ALT+SHIFT+K (default hotkey).\n\nBind this shortcut to one of your mouse buttons with Logitech Options and you'll get the old OneTouchSearch feature back!"));
+						aboutMessage.append(_T("\n\nAllows to open the default web browser and search the currently selected text in any program when pressing CTRL+ALT+SHIFT+K (default hotkey).\n\nBind this shortcut to one of your mouse buttons with Logitech Options and you'll get the old OneTouchSearch feature back! Consider also running this program as Administrator to catch the input in both admin and non-admin apps."));
 						MessageBox(g_hMainWnd, aboutMessage.c_str(), _T("One Touch Search"), MB_ICONINFORMATION | MB_OK);
 					}
 				}
@@ -214,7 +214,14 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 			{
 				if (msg.message == WM_HOTKEY) {
 					// Run One Touch Search code when the hotkey is detected
-					oneTouchSearch(searchEngineURL.c_str());
+					bool success = oneTouchSearch(searchEngineURL.c_str());
+
+					// Check if not successfull
+					if (success != TRUE) {
+
+						// Display a notification
+						g_TrayIconOTS.ShowBalloonTooltip("One Touch Search", "No selected text found!", CTrayIcon::eTI_Info);
+					}
 
 				} else {
 					// Dispatch other messages to the main window

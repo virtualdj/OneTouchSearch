@@ -3,13 +3,14 @@ A Windows tray icon program that emulates the *One Touch Search* feature of the 
 When it is running and the user presses the default hotkey <kbd>CTRL</kbd>+<kbd>ALT</kbd>+<kbd>SHIFT</kbd>+<kbd>K</kbd> the currently selected text (in any application) is used to launch a search with the default browser.
 
 ## Disclaimer
-It's my first C++ project so I don't practice this language very well (actually, "at all"!). Feel free to submit code corrections and new features, if you like, because at the moment this is the maximum I can do. :smiley:
+It's my first C++ project so I don't practice this language very well (actually, "at all"!). Feel free to submit PRs with code corrections and new features, if you like, because at the moment this is the maximum I can do. :smiley:
 
 ## Usage
 1. Either compile the source code with VS2010 or run the binary available on the **Release** section: an icon will be placed on the system tray.
-2. Select some text on a Windows application, such as Notepad or Word, etc..
-3. Press <kbd>CTRL</kbd>+<kbd>ALT</kbd>+<kbd>SHIFT</kbd>+<kbd>K</kbd> on your keyboard, a new browser tab (or instance) should search the highlighted text using Google US.
-4. (Optional) Assign the hotkey to one of the mouse buttons using Logitech Options, so you can search exactly as the old Logitech SetPoint feature with the same name.
+2. Important note: due to UIPI (User Interface Privilege Isolation), only if you run the application as Administrator it will be able to grab text from both admin and non-admin apps, so be sure to try both modes. Consider that the original One Touch Search from Logitech cannot grab text from admin apps, too.
+3. Select some text on a Windows application, such as Notepad or Word, etc..
+4. Press <kbd>CTRL</kbd>+<kbd>ALT</kbd>+<kbd>SHIFT</kbd>+<kbd>K</kbd> on your keyboard, a new browser tab (or instance) should search the highlighted text using Google US.
+5. (Optional) Assign the hotkey to one of the mouse buttons using Logitech Options, so you can search exactly as the old Logitech SetPoint feature with the same name.
 
 ## Advanced configuration
 As you may guess from the sources, I'm not able to create a UI for the configuration like for the Logitech's OneTouchSearch. But you can change the *Search Engine* and *Hotkey* from the registry, if you like.
