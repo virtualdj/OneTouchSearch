@@ -153,7 +153,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 
 	// Read search engine URL from the registry
 	searchEngineURL.resize(1023);
-	DWORD searchEngineURL_size;
+	DWORD searchEngineURL_size = searchEngineURL.size();
 	if (RegGetValue(REG_HK, OTS_REG_KEY, OTS_REG_VALUE_URL, RRF_RT_REG_SZ, NULL, &searchEngineURL[0], &searchEngineURL_size) == ERROR_SUCCESS) {
 		// Check size of the returned string
 		if (searchEngineURL_size > 4) {
